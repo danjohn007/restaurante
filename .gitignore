@@ -1,0 +1,35 @@
+# Database files
+data/
+*.sqlite
+*.db
+
+# Test files
+test_*.php
+
+# Log files
+*.log
+
+# Cache files
+cache/
+tmp/
+
+# Environment files
+.env
+
+# Upload directories
+assets/images/uploads/*
+!assets/images/uploads/.gitkeep
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Backup files
+*.bak
+*.backup
