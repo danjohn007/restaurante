@@ -25,6 +25,11 @@ class Router {
             'logout' => ['controller' => 'Auth', 'action' => 'logout'],
             'register' => ['controller' => 'Auth', 'action' => 'register'],
             
+            // Auth routes with /auth/ prefix
+            'auth/login' => ['controller' => 'Auth', 'action' => 'login'],
+            'auth/logout' => ['controller' => 'Auth', 'action' => 'logout'],
+            'auth/register' => ['controller' => 'Auth', 'action' => 'register'],
+            
             // User management
             'users' => ['controller' => 'User', 'action' => 'index'],
             'users/create' => ['controller' => 'User', 'action' => 'create'],
