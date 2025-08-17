@@ -10,7 +10,7 @@ abstract class BaseController {
     protected $user;
 
     public function __construct() {
-        $this->db = Database::getInstance();
+        $this->db = Database::getInstance()->getConnection();
         $this->user = get_logged_user();
     }
 

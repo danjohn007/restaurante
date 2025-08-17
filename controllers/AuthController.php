@@ -63,7 +63,10 @@ class AuthController extends BaseController {
     }
 
     private function setUserSession($user) {
-        session_regenerate_id(true);
+        // Only regenerate session ID if headers haven't been sent (web environment)
+        if (!headers_sent()) {
+            session_regenerate_id(true);
+        }
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['user_email'] = $user['email'];
         $_SESSION['user_first_name'] = $user['first_name'];
