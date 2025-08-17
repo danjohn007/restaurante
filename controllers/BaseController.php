@@ -10,8 +10,19 @@ abstract class BaseController {
     protected $user;
 
     public function __construct() {
-        $this->db = Database::getInstance();
-        $this->user = get_logged_user();
+        try {
+            $this->db = Database::getInstance();
+            $this->user = get_logged_user();
+        } catch (Exception $e) {
+            // Log the database error
+            error_log("Database connection failed in BaseController: " . $e->getMessage());
+            
+            // Set db to null so controllers can check if database is available
+            $this->db = null;
+            $this->user = null;
+            
+            // Don't throw the exception here, let controllers handle it
+        }
     }
 
     /**
@@ -70,10 +81,31 @@ abstract class BaseController {
     }
 
     /**
+     * Check if database is available
+     */
+    protected function isDatabaseAvailable() {
+        return $this->db !== null;
+    }
+
+    /**
+     * Show database error page
+     */
+    protected function showDatabaseError() {
+        $this->view('errors/database', [
+            'title' => 'Error de Configuración'
+        ]);
+    }
+
+    /**
      * Require authentication
      */
     protected function requireAuth() {
+        if (!$this->isDatabaseAvailable()) {
+            $this->showDatabaseError();
+            return false;
+        }
         require_login();
+        return true;
     }
 
     /**

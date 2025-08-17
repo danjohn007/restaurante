@@ -18,17 +18,23 @@ class Database {
                 ]
             );
         } catch (PDOException $e) {
-            // In development, show error details
-            if (ini_get('display_errors')) {
-                die('Database connection failed: ' . $e->getMessage() . '<br><br>
-                     <strong>Setup Instructions:</strong><br>
-                     1. Create MySQL database: <code>restaurante_db</code><br>
-                     2. Import schema: <code>mysql -u root -p restaurante_db < database/schema.sql</code><br>
-                     3. Update database credentials in <code>config/config.php</code><br>
-                     4. For testing without MySQL, use SQLite (modify config)');
-            } else {
-                die('Database connection failed. Please check configuration.');
+            // Try SQLite fallback if MySQL fails and SQLite file exists
+            $sqliteFile = 'data/test_database.sqlite';
+            if (file_exists($sqliteFile)) {
+                try {
+                    $this->connection = new PDO("sqlite:$sqliteFile");
+                    $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                    $this->connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+                    error_log("Database: Fell back to SQLite due to MySQL connection failure");
+                    return;
+                } catch (PDOException $sqliteError) {
+                    error_log("Database: Both MySQL and SQLite failed - " . $sqliteError->getMessage());
+                }
             }
+            
+            // If both fail, set connection to null and throw exception
+            $this->connection = null;
+            throw new Exception('Database connection failed: ' . $e->getMessage());
         }
     }
 

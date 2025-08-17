@@ -4,7 +4,10 @@ require_once 'BaseController.php';
 class DashboardController extends BaseController {
 
     public function index() {
-        $this->requireAuth();
+        // Check if authentication is possible (requires database)
+        if (!$this->requireAuth()) {
+            return; // requireAuth already showed the database error page
+        }
         
         $data = [
             'title' => 'Dashboard',

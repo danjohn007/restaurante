@@ -32,7 +32,7 @@ function is_logged_in() {
 
 function require_login() {
     if (!is_logged_in()) {
-        header('Location: ' . BASE_URL . 'auth/login');
+        header('Location: ' . BASE_URL . 'login');
         exit();
     }
 }
