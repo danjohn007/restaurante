@@ -1,13 +1,13 @@
 <?php
 // Database configuration
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'restaurante_db');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+define('DB_NAME', 'ejercito_restaurante');
+define('DB_USER', 'ejercito_restaurante');
+define('DB_PASS', 'Danjohn007!');
 define('DB_CHARSET', 'utf8mb4');
 
 // Application configuration
-define('BASE_URL', '/restaurante/'); // Change this to your installation directory
+define('BASE_URL', 'https://ejercitodigital.com.mx/restaurante/'); // Change this to your installation directory
 define('SITE_NAME', 'Sistema de Restaurante');
 define('SITE_DESCRIPTION', 'Sistema Online de Administración de Restaurante');
 
