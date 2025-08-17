@@ -18,16 +18,19 @@ class Database {
                 ]
             );
         } catch (PDOException $e) {
-            // In development, show error details
+            $this->connection = null;
+            error_log("Database connection failed: " . $e->getMessage());
+            
+            // Don't kill the application, let controllers handle the error gracefully
+            // In development, we might want to show setup instructions
             if (ini_get('display_errors')) {
-                die('Database connection failed: ' . $e->getMessage() . '<br><br>
+                // Store error for potential display later, but don't die immediately
+                $_SESSION['db_error'] = 'Database connection failed: ' . $e->getMessage() . '<br><br>
                      <strong>Setup Instructions:</strong><br>
-                     1. Create MySQL database: <code>restaurante_db</code><br>
-                     2. Import schema: <code>mysql -u root -p restaurante_db < database/schema.sql</code><br>
+                     1. Create MySQL database: <code>' . DB_NAME . '</code><br>
+                     2. Import schema: <code>mysql -u root -p ' . DB_NAME . ' < database/schema.sql</code><br>
                      3. Update database credentials in <code>config/config.php</code><br>
-                     4. For testing without MySQL, use SQLite (modify config)');
-            } else {
-                die('Database connection failed. Please check configuration.');
+                     4. For testing without MySQL, use SQLite (modify config)';
             }
         }
     }
@@ -43,27 +46,49 @@ class Database {
         return $this->connection;
     }
 
+    public function isConnected() {
+        return $this->connection !== null;
+    }
+
     public function prepare($sql) {
+        if (!$this->isConnected()) {
+            throw new Exception("Database not connected");
+        }
         return $this->connection->prepare($sql);
     }
 
     public function query($sql) {
+        if (!$this->isConnected()) {
+            throw new Exception("Database not connected");
+        }
         return $this->connection->query($sql);
     }
 
     public function lastInsertId() {
+        if (!$this->isConnected()) {
+            throw new Exception("Database not connected");
+        }
         return $this->connection->lastInsertId();
     }
 
     public function beginTransaction() {
+        if (!$this->isConnected()) {
+            throw new Exception("Database not connected");
+        }
         return $this->connection->beginTransaction();
     }
 
     public function commit() {
+        if (!$this->isConnected()) {
+            throw new Exception("Database not connected");
+        }
         return $this->connection->commit();
     }
 
     public function rollback() {
+        if (!$this->isConnected()) {
+            throw new Exception("Database not connected");
+        }
         return $this->connection->rollback();
     }
 }

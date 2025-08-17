@@ -72,6 +72,12 @@ class Router {
     public function route() {
         $url = isset($_GET['url']) ? trim($_GET['url'], '/') : '';
         
+        // Check if database is available before routing to controllers that need it
+        if (!$this->isDatabaseAvailable()) {
+            $this->showDatabaseSetup();
+            return;
+        }
+        
         // Handle direct controller/action URLs
         if (isset($this->routes[$url])) {
             $controller = $this->routes[$url]['controller'];
@@ -104,6 +110,20 @@ class Router {
         } else {
             $this->show404();
         }
+    }
+    
+    private function isDatabaseAvailable() {
+        try {
+            $db = Database::getInstance();
+            return $db->isConnected();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    
+    private function showDatabaseSetup() {
+        $error_message = 'Database connection failed. Please configure the database to continue.';
+        include 'views/setup/database_error.php';
     }
 
     private function show404() {
