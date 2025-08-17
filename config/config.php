@@ -6,6 +6,10 @@ define('DB_USER', 'ejercito_restaurante');
 define('DB_PASS', 'Danjohn007!');
 define('DB_CHARSET', 'utf8mb4');
 
+// For development/demo purposes, we'll use SQLite as fallback
+define('USE_SQLITE_FALLBACK', true);
+define('SQLITE_DB_PATH', 'database/restaurante.db');
+
 // Application configuration
 define('BASE_URL', 'https://ejercitodigital.com.mx/restaurante/'); // Change this to your installation directory
 define('SITE_NAME', 'Sistema de Restaurante');
